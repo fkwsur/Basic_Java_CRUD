@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.models.*;
 import com.example.mapper.*;
+import com.example.service.*;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
@@ -11,16 +12,22 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.List;
+import java.util.Iterator;
 
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins="*", allowedHeaders="*")
 public class ExController {
 
   private UserMapper userMapper;
+  private Bcrypt bcrypt;
+  private JWTManager jwt;
 
-  public ExController(UserMapper userMapper) {
+  public ExController(UserMapper userMapper, JWTManager jwt ,Bcrypt bcrypt) {
     this.userMapper = userMapper;
+    this.jwt = jwt;
+    this.bcrypt = bcrypt;
   }
 
   @GetMapping("/users")
@@ -30,12 +37,36 @@ public class ExController {
 
   @PostMapping("/user") 
   public ResponseEntity<Map<String,String>> CreateUser(@RequestBody User req) {
-    userMapper.Create(req);
+    //System.out.println(req);
+    //System.out.println(req.getPassword());
+    //System.out.println(req.getId());
     
+    String hashpassword = bcrypt.HashPassword(req.getPassword());
+    req.setPassword(hashpassword);
+    userMapper.Create(req);
     Map<String,String> map = new HashMap<>();
     map.put("result", "success");
 
     return new ResponseEntity<>(map, HttpStatus.OK);
+  }
+
+  @PostMapping("/login")
+  public ResponseEntity<Map<String, String>> Login(@RequestBody ReqUser req) {
+    User user = new User();
+    user = userMapper.findOne(req.getId());
+    Boolean result = bcrypt.CompareHash(req.getPassword(), user.getPassword());
+    Map<String,String> map = new HashMap<>();
+
+    if (result) {
+      String token = jwt.CreateToken(user.getId());
+  
+      map.put("result", token);
+      return new ResponseEntity<>(map, HttpStatus.OK);
+      } else {
+          map.put("result", "password is not correct");
+          return new ResponseEntity<>(map, HttpStatus.OK);        
+      }
+
   }
 
   @PostMapping("/update") 

@@ -1,25 +1,20 @@
 package com.example.models;
 
-public class User {
+public class ReqUser {
 
-  private Long idx;
   private String id;
   private String password;
 
-  public User() {
+  public ReqUser() {
     super();
   }
 
-  public User(Long idx, String id, String password) {
+  public ReqUser(String id, String password) {
     super();
-    this.idx = idx;
     this.id = id;
     this.password = password;
   }
 
-  public Long getIdx() {
-    return idx;
-  }
 
   public String getId() {
     return id;
@@ -29,10 +24,6 @@ public class User {
     return password;
   }
 
-  public void setIdx(Long idx) {
-    this.idx = idx;
-  }
-
   public void setId(String id) {
     this.id = id;
   }
@@ -40,5 +31,7 @@ public class User {
   public void setPassword(String password) {
     this.password = password;
   }
+
+  
 
 }

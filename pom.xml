@@ -33,15 +33,31 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-		<groupId>org.mybatis.spring.boot</groupId>
-		<artifactId>mybatis-spring-boot-starter</artifactId>
-		<version>2.0.1</version>
-	</dependency>
-	<dependency>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter</artifactId>
+			<version>2.0.1</version>
+		</dependency>
+		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>5.5.2</version>
+		</dependency>
+		<dependency>
+    		<groupId>com.googlecode.json-simple</groupId>
+    		<artifactId>json-simple</artifactId>
+    		<version>1.1.1</version>
+		</dependency>
+		<dependency> 
+			<groupId>io.jsonwebtoken</groupId> 
+			<artifactId>jjwt</artifactId> 
+			<version>0.9.1</version> 
+		</dependency>
+
 	</dependencies>
 
 	<build>

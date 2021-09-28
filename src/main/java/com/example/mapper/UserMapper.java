@@ -12,7 +12,10 @@ public interface UserMapper {
   @Select("select * from user")
   List<User> findAll();
 
-  @Insert("insert into user(id) values(#{id})")
+  @Select("select * from user where id = #{id}")
+  User findOne(String id);
+
+  @Insert("insert into user(id, password) values(#{id}, #{password})")
   void Create(User user);
 
   @Update("update user set id = #{id} where idx = #{idx}")
