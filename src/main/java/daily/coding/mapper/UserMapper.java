@@ -1,6 +1,6 @@
-package com.example.mapper;
+package daily.coding.mapper;
 
-import com.example.models.*;
+import daily.coding.models.*;
 
 import org.apache.ibatis.annotations.*;
 

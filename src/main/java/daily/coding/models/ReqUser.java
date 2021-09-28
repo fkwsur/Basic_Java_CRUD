@@ -1,4 +1,4 @@
-package com.example.models;
+package daily.coding.models;
 
 public class ReqUser {
 

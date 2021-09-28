@@ -1,46 +1,39 @@
-package com.example.controller;
+package daily.coding.controller; // 자기 위치를 명시
 
-import com.example.models.*;
-import com.example.mapper.*;
-import com.example.service.*;
+import daily.coding.models.*;
+import daily.coding.mapper.*;
+import daily.coding.service.*;
 
+// 프레임워크에 탑재된 기능 가져오기
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+// 자바 가지고 있는 내장 모듈
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.List;
 import java.util.Iterator;
 
-
-@RestController
-@RequestMapping("/api")
-@CrossOrigin(origins="*", allowedHeaders="*")
+@RestController // restApi를 작성할 수 있는 컨트롤러
+@RequestMapping("/api") // url을 api로 지정
+@CrossOrigin(origins="*", allowedHeaders="*") // cors허용
 public class ExController {
 
   private UserMapper userMapper;
   private Bcrypt bcrypt;
   private JWTManager jwt;
 
-  public ExController(UserMapper userMapper, JWTManager jwt ,Bcrypt bcrypt) {
+  public ExController(UserMapper userMapper, JWTManager jwt, Bcrypt bcrypt) {
     this.userMapper = userMapper;
-    this.jwt = jwt;
     this.bcrypt = bcrypt;
+    this.jwt = jwt;
   }
 
-  @GetMapping("/users")
-  public List<User> AllUser() {
-    return userMapper.findAll();
-  }
-
+  // create
   @PostMapping("/user") 
   public ResponseEntity<Map<String,String>> CreateUser(@RequestBody User req) {
-    //System.out.println(req);
-    //System.out.println(req.getPassword());
-    //System.out.println(req.getId());
-    
     String hashpassword = bcrypt.HashPassword(req.getPassword());
     req.setPassword(hashpassword);
     userMapper.Create(req);
@@ -48,6 +41,12 @@ public class ExController {
     map.put("result", "success");
 
     return new ResponseEntity<>(map, HttpStatus.OK);
+  }
+
+  // read
+  @GetMapping("/users")
+  public List<User> AllUser() {
+    return userMapper.findAll();
   }
 
   @PostMapping("/login")
@@ -59,16 +58,16 @@ public class ExController {
 
     if (result) {
       String token = jwt.CreateToken(user.getId());
-  
+
       map.put("result", token);
       return new ResponseEntity<>(map, HttpStatus.OK);
       } else {
           map.put("result", "password is not correct");
           return new ResponseEntity<>(map, HttpStatus.OK);        
       }
-
   }
 
+  // update
   @PostMapping("/update") 
   public ResponseEntity<Map<String,String>> UpdateUser(@RequestBody User req) {
     userMapper.Update(req);
@@ -79,6 +78,7 @@ public class ExController {
     return new ResponseEntity<>(map, HttpStatus.OK);
   }
 
+  // delete
   @PostMapping("/delete") 
   public ResponseEntity<Map<String,String>> DeleteUser(@RequestBody User req) {
     userMapper.Delete(req);
@@ -89,39 +89,13 @@ public class ExController {
     return new ResponseEntity<>(map, HttpStatus.OK);
   }
 
-  @GetMapping("/hello")
-  public ResponseEntity<Map<String,String>> Hello() {
-    Map<String,String> map = new HashMap<>();
-    map.put("result", "hello world");
 
-    return new ResponseEntity<>(map, HttpStatus.OK);
-  }
+  @GetMapping("/hello") // get /api/hello
+  public ResponseEntity<Map<String,String>> Hello() { // ResponseEntity 리턴타입 Map 키와 값을 하나의 쌍으로 저장
+    Map<String,String> map = new HashMap<>(); // map 선언, HashMap은 Map 인터페이스를 구현한 대표적인 Map 컬렉션
+    map.put("result", "hello world"); // map에 값 넣기
 
-  @GetMapping("/hello2")
-  public ResponseEntity<Map<String,String>> Hello2() {
-    Map<String,String> map = new HashMap<>();
-    map.put("result", "hello??");
-
-    return new ResponseEntity<>(map, HttpStatus.OK);
-  }
-
-  @PostMapping("/name") 
-  public ResponseEntity<Map<String,String>> YourName(@RequestBody Request req) {
-    Map<String,String> map = new HashMap<>();
-
-    map.put("your_name", req.getName());
-    return new ResponseEntity<>(map, HttpStatus.OK);
-  }
-
-  @PostMapping("/test") 
-  public ResponseEntity<Map<String,String>> YourInfo(@RequestBody Request req) {
-    Map<String,String> map = new HashMap<>();
-
-    map.put("your_name", req.getName());
-    map.put("your_age", req.getAge());
-    map.put("your_address", req.getAddress());
-    return new ResponseEntity<>(map, HttpStatus.OK);
+    return new ResponseEntity<>(map, HttpStatus.OK); // 생성자로 ResponseEntity를 만들어서 map이랑 status클라이언트에 보내줌
   }
 
 }
-
